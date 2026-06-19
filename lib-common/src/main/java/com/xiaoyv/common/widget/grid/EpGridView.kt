@@ -84,8 +84,7 @@ class EpGridView @JvmOverloads constructor(
         layoutManager = verticalProcessManager
         adapter = gridVerAdapter
         gridVerAdapter.addOnItemChildClickListener(R.id.item_ep, listener)
-        gridVerAdapter.submitList(null)
-        gridVerAdapter.addAll(list)
+        gridVerAdapter.submitList(list)
     }
 
     /**

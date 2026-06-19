@@ -63,8 +63,6 @@ class AnimeEpProgressView @JvmOverloads constructor(
 
         // 书籍的VOL进度条
         if (entity.mediaType == MediaType.TYPE_BOOK && epOrVol.not()) {
-            binding.pbMedia.max = entity.progressSecondMax
-            binding.pbMedia.setProgress(entity.progressSecond, true)
             binding.tvProgress.text = buildString {
                 append(progressTip)
                 append("：")
@@ -74,11 +72,10 @@ class AnimeEpProgressView @JvmOverloads constructor(
             }
             binding.ivAdd.isVisible = (entity.progressSecond != entity.progressSecondMax
                     || entity.progressSecondMax == 0)
+            updatePanelProgress(entity.progressSecond, entity.progressSecondMax)
         }
         // EP 进度条
         else {
-            binding.pbMedia.max = entity.progressMax
-            binding.pbMedia.setProgress(entity.progress, true)
             binding.tvProgress.text = buildString {
                 append(progressTip)
                 append("：")
@@ -88,10 +85,23 @@ class AnimeEpProgressView @JvmOverloads constructor(
             }
             binding.ivAdd.isVisible = (entity.progress != entity.progressMax
                     || entity.progressMax == 0)
+            updatePanelProgress(entity.progress, entity.progressMax)
         }
 
         binding.ivAdd.setOnFastLimitClickListener {
             clickAddListener(entity, epOrVol)
+        }
+    }
+
+    private fun updatePanelProgress(progress: Int, max: Int) {
+        binding.progressPanel.post {
+            val percent = if (max <= 0) 0f else progress.toFloat() / max
+            val fixedPercent = percent.coerceIn(0f, 1f)
+            val fillWidth = (binding.progressPanel.width * fixedPercent).toInt()
+            binding.progressFill.isVisible = fillWidth > 0
+            binding.progressFill.layoutParams = binding.progressFill.layoutParams.apply {
+                width = fillWidth
+            }
         }
     }
 }
