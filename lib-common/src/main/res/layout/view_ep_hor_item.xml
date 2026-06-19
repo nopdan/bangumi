@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:padding="@dimen/ui_size_6">
+    android:padding="@dimen/ui_size_4">
 
     <com.xiaoyv.common.widget.text.AnimeTextView
         android:id="@+id/tv_ep"
@@ -18,10 +18,11 @@
         android:breakStrategy="balanced"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
-        android:maxLines="2"
         android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxLines="2"
         android:text="1"
-        android:textAppearance="?attr/textAppearanceLabelSmall"
+        android:textAppearance="?attr/textAppearanceLabelMedium"
         android:textColor="?attr/colorOnSurface"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,8 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/ui_size_3"
+        android:includeFontPadding="false"
         android:text="SP"
-        android:textSize="6sp"
+        android:textSize="7sp"
         app:layout_constraintStart_toStartOf="@+id/tv_ep"
         app:layout_constraintTop_toTopOf="@+id/tv_ep"
         tools:ignore="HardcodedText,SmallSp" />
