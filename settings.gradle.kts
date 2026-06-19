@@ -2,7 +2,6 @@
 
 include(":lib-i18n")
 
-
 pluginManagement {
     repositories {
         google {
@@ -15,6 +14,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+}
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
 }
 
 dependencyResolutionManagement {
@@ -46,6 +48,3 @@ include(":lib-live2d")
 include(":lib-emoji")
 include(":lib-subtitle")
 include(":lib-script")
-
-
-
