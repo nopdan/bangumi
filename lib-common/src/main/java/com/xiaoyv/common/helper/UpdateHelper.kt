@@ -8,7 +8,6 @@ import com.xiaoyv.common.BuildConfig
 import com.xiaoyv.common.api.BgmApiManager
 import com.xiaoyv.common.api.response.GithubActionEntity
 import com.xiaoyv.common.kts.CommonString
-import com.xiaoyv.common.kts.debugLog
 import com.xiaoyv.common.kts.openInBrowser
 import com.xiaoyv.common.kts.showConfirmDialog
 import com.xiaoyv.common.kts.i18n
@@ -88,8 +87,6 @@ object UpdateHelper {
 
     private suspend fun queryActionDownloadUrl(artifact: GithubActionEntity.Artifact): String {
         return withContext(Dispatchers.IO) {
-
-            debugLog { "github:$token" }
             BgmApiManager.bgmWebNoRedirectApi.queryGithubActionDownloadUrl(
                 url = artifact.archiveDownloadUrl.orEmpty(),
                 token = "Bearer $token"
@@ -122,7 +119,9 @@ object UpdateHelper {
 
                 val versionName = AppUtils.getAppVersionName()
                 val tagVersionName = tagName.removePrefix("v").trim()
-                require(versionName != tagVersionName) { i18n(CommonString.update_newest) }
+                require(compareVersion(tagVersionName, versionName) > 0) {
+                    i18n(CommonString.update_newest)
+                }
 
                 val assets = entity.assets.orEmpty().firstOrNull {
                     it.contentType == "application/vnd.android.package-archive"
@@ -145,5 +144,21 @@ object UpdateHelper {
                 )
             }
         )
+    }
+
+    private fun compareVersion(remote: String, local: String): Int {
+        val remoteParts = remote.split(".").map { it.toIntOrNull() ?: 0 }
+        val localParts = local.split(".").map { it.toIntOrNull() ?: 0 }
+        val maxSize = maxOf(remoteParts.size, localParts.size)
+
+        for (index in 0 until maxSize) {
+            val remotePart = remoteParts.getOrElse(index) { 0 }
+            val localPart = localParts.getOrElse(index) { 0 }
+            if (remotePart != localPart) {
+                return remotePart.compareTo(localPart)
+            }
+        }
+
+        return 0
     }
 }
